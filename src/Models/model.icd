@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SCL xmlns="http://www.iec.ch/61850/2003/SCL">
+    <Header id="SimpleIED" version="1" revision="1"/>
+    <IED name="SimpleIED">
+        <Services>
+            <DynAssociation />
+            <GetDirectory />
+            <GetDataObjectDefinition />
+            <GetDataSetValue />
+            <DataSetDirectory />
+            <FileHandling />
+            <GSEDir />
+            <TimerActivatedControl />
+            <ReportSettings datSet="Conf" rptID="Dyn" optFields="Dyn" bufTime="Dyn" trgOps="Dyn" intgPd="Dyn"/>
+        </Services>
+        <AccessPoint name="AP1">
+            <Server>
+                <Authentication />
+                <LDevice inst="Measurements">
+                    <LN0 lnClass="LLN0" lnType="LLN0" inst="">
+                        <!-- Dataset definition -->
+                        <DataSet name="measurements" desc="Measurement values">
+                            <FCDA ldInst="Measurements" prefix="" lnClass="MMXU" lnInst="1" doName="A.instMag.f" fc="MX"/>
+                            <FCDA ldInst="Measurements" prefix="" lnClass="MMXU" lnInst="1" doName="PhV.instMag.f" fc="MX"/>
+                            <FCDA ldInst="Measurements" prefix="" lnClass="MMXU" lnInst="1" doName="W.instMag.f" fc="MX"/>
+                        </DataSet>
+                        
+                        <!-- Buffered Report Control Block -->
+                        <ReportControl name="brcbMeasurements" rptID="Measurements/LLN0.brcbMeasurements" datSet="measurements" confRev="1" buffered="true" bufTime="50" intgPd="1000" indexed="true">
+                            <TrgOps dchg="true" qchg="true" dupd="true" period="true" gi="true"/>
+                            <OptFields seqNum="true" timeStamp="true" dataSet="true" reasonCode="true" dataRef="true" entryID="true" configRef="true"/>
+                        </ReportControl>
+                        
+                        <!-- Unbuffered Report Control Block -->
+                        <ReportControl name="urcbMeasurements" rptID="Measurements/LLN0.urcbMeasurements" datSet="measurements" confRev="1" buffered="false" bufTime="50" intgPd="1000" indexed="true">
+                            <TrgOps dchg="true" qchg="true" dupd="true" period="true" gi="true"/>
+                            <OptFields seqNum="true" timeStamp="true" dataSet="true" reasonCode="true" dataRef="true" entryID="true" configRef="true"/>
+                        </ReportControl>
+                    </LN0>
+                    <LN prefix="" lnClass="MMXU" inst="1" lnType="MMXU1"/>
+                </LDevice>
+            </Server>
+        </AccessPoint>
+    </IED>
+    <DataTypeTemplates>
+        <LNodeType id="LLN0" lnClass="LLN0">
+            <DO name="Mod" type="INC_1"/>
+            <DO name="Beh" type="INS_1"/>
+            <DO name="Health" type="INS_1"/>
+            <DO name="NamPlt" type="LPL_1"/>
+        </LNodeType>
+        <LNodeType id="MMXU1" lnClass="MMXU">
+            <DO name="A" type="SAV_1"/>
+            <DO name="PhV" type="SAV_1"/>
+            <DO name="W" type="SAV_1"/>
+        </LNodeType>
+        <DOType id="SAV_1" cdc="SAV">
+            <DA name="instMag" bType="Struct" type="AnalogueValue_1" fc="MX"/>
+            <DA name="q" bType="Quality" fc="MX"/>
+            <DA name="t" bType="Timestamp" fc="MX"/>
+        </DOType>
+        <DAType id="AnalogueValue_1">
+            <BDA name="f" bType="FLOAT32"/>
+        </DAType>
+        <DOType id="INC_1" cdc="INC">
+            <DA name="stVal" fc="ST" bType="INT32"/>
+            <DA name="q" fc="ST" bType="Quality"/>
+            <DA name="t" fc="ST" bType="Timestamp"/>
+        </DOType>
+        <DOType id="INS_1" cdc="INS">
+            <DA name="stVal" fc="ST" bType="INT32"/>
+            <DA name="q" fc="ST" bType="Quality"/>
+            <DA name="t" fc="ST" bType="Timestamp"/>
+        </DOType>
+        <DOType id="LPL_1" cdc="LPL">
+            <DA name="vendor" fc="DC" bType="VisString255"/>
+        </DOType>
+    </DataTypeTemplates>
+</SCL>

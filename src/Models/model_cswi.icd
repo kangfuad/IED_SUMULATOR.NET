@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SCL xmlns="http://www.iec.ch/61850/2003/SCL">
+    <Header id="CSWI_IED" version="1" revision="1"/>
+    <Communication>
+        <SubNetwork name="Network1" type="8-MMS">
+            <ConnectedAP iedName="CSWI_IED" apName="AP1">
+                <Address>
+                    <P type="IP">127.0.0.1</P>
+                    <P type="IP-SUBNET">255.255.255.0</P>
+                    <P type="IP-GATEWAY">0.0.0.0</P>
+                    <P type="OSI-TSEL">0001</P>
+                    <P type="OSI-PSEL">00000001</P>
+                    <P type="OSI-SSEL">0001</P>
+                </Address>
+            </ConnectedAP>
+        </SubNetwork>
+    </Communication>
+    <IED name="CSWI_IED">
+        <Services>
+            <DynAssociation />
+            <GetDirectory />
+            <GetDataObjectDefinition />2
+            <GetDataSetValue />
+            <SetDataSetValue />
+            <DataSetDirectory />
+            <ReadWrite />
+            <TimerActivatedControl />
+        </Services>
+        <AccessPoint name="AP1">
+            <Server>
+                <Authentication />
+                <LDevice inst="CSWI_Control">
+                    <LN0 lnClass="LLN0" inst="" lnType="LLN0">
+                        <DataSet name="SwitchControls">
+                            <FCDA ldInst="CSWI_Control" prefix="" lnClass="CSWI" lnInst="1" doName="Pos" daName="stVal" fc="ST"/>
+                            <FCDA ldInst="CSWI_Control" prefix="" lnClass="CSWI" lnInst="1" doName="Pos" daName="q" fc="ST"/>
+                            <FCDA ldInst="CSWI_Control" prefix="" lnClass="CSWI" lnInst="1" doName="Pos" daName="t" fc="ST"/>
+                            <FCDA ldInst="CSWI_Control" prefix="" lnClass="CSWI" lnInst="1" doName="Loc" daName="stVal" fc="ST"/>
+                            <FCDA ldInst="CSWI_Control" prefix="" lnClass="CSWI" lnInst="1" doName="OpCnt" daName="stVal" fc="ST"/>
+                        </DataSet>
+
+                        <ReportControl name="brcbCSWI" rptID="CSWI_Control_Data" datSet="SwitchControls" confRev="1" buffered="true" bufTime="100">
+                            <TrgOps dchg="true" qchg="true" dupd="false" period="true" gi="true"/>
+                            <OptFields seqNum="true" timeStamp="true" dataSet="true" reasonCode="true" dataRef="true" entryID="true" configRef="true"/>
+                            <RptEnabled max="2"/>
+                        </ReportControl>
+                    </LN0>
+
+                    <LN prefix="" lnClass="CSWI" inst="1" lnType="CSWI_1">
+                        <DOI name="Pos">
+                            <DAI name="ctlModel">
+                                <Val>sbo-with-enhanced-security</Val>
+                            </DAI>
+                        </DOI>
+                    </LN>
+                </LDevice>
+            </Server>
+        </AccessPoint>
+    </IED>
+
+    <DataTypeTemplates>
+        <LNodeType id="LLN0" lnClass="LLN0">
+            <DO name="Mod" type="INC_1"/>
+            <DO name="Beh" type="INS_1"/>
+            <DO name="Health" type="INS_1"/>
+            <DO name="NamPlt" type="LPL_1"/>
+        </LNodeType>
+
+        <LNodeType id="CSWI_1" lnClass="CSWI">
+            <DO name="Mod" type="INC_1"/>
+            <DO name="Beh" type="INS_1"/>
+            <DO name="Health" type="INS_1"/>
+            <DO name="NamPlt" type="LPL_1"/>
+            <DO name="Loc" type="SPS_1"/>
+            <DO name="OpCnt" type="INS_1"/>
+            <DO name="Pos" type="DPC_1"/>
+        </LNodeType>
+
+        <DOType id="INC_1" cdc="INC">
+            <DA name="stVal" fc="ST" bType="INT32"/>
+            <DA name="q" fc="ST" bType="Quality"/>
+            <DA name="t" fc="ST" bType="Timestamp"/>
+            <DA name="ctlModel" fc="CF" bType="Enum" type="CtlModelKind"/>
+        </DOType>
+
+        <DOType id="INS_1" cdc="INS">
+            <DA name="stVal" fc="ST" bType="INT32"/>
+            <DA name="q" fc="ST" bType="Quality"/>
+            <DA name="t" fc="ST" bType="Timestamp"/>
+        </DOType>
+
+        <DOType id="SPS_1" cdc="SPS">
+            <DA name="stVal" fc="ST" bType="BOOLEAN"/>
+            <DA name="q" fc="ST" bType="Quality"/>
+            <DA name="t" fc="ST" bType="Timestamp"/>
+        </DOType>
+
+        <DOType id="DPC_1" cdc="DPC">
+            <DA name="stVal" fc="ST" bType="Dbpos"/>
+            <DA name="q" fc="ST" bType="Quality"/>
+            <DA name="t" fc="ST" bType="Timestamp"/>
+            <DA name="ctlModel" fc="CF" bType="Enum" type="CtlModelKind"/>
+        </DOType>
+
+        <DOType id="LPL_1" cdc="LPL">
+            <DA name="vendor" fc="DC" bType="VisString255"/>
+            <DA name="swRev" fc="DC" bType="VisString255"/>
+        </DOType>
+
+        <EnumType id="CtlModelKind">
+            <EnumVal ord="0">status-only</EnumVal>
+            <EnumVal ord="1">direct-with-normal-security</EnumVal>
+            <EnumVal ord="2">sbo-with-normal-security</EnumVal>
+            <EnumVal ord="3">direct-with-enhanced-security</EnumVal>
+            <EnumVal ord="4">sbo-with-enhanced-security</EnumVal>
+        </EnumType>
+    </DataTypeTemplates>
+</SCL>

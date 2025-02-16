@@ -1,0 +1,137 @@
+{
+  "version": 3,
+  "targets": {
+    "net9.0": {
+      "IEC61850.NET.core.2.0/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/IEC61850.NET.core.2.0.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/IEC61850.NET.core.2.0.dll": {}
+        }
+      },
+      "IEDSimulator.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/IEDSimulator.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/IEDSimulator.Core.dll": {}
+        }
+      },
+      "IEDSimulator.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "IEC61850.NET.core.2.0": "1.0.0",
+          "IEDSimulator.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/IEDSimulator.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/IEDSimulator.Infrastructure.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "IEC61850.NET.core.2.0/1.0.0": {
+      "type": "project",
+      "path": "../../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj",
+      "msbuildProject": "../../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj"
+    },
+    "IEDSimulator.Core/1.0.0": {
+      "type": "project",
+      "path": "../IEDSimulator.Core/IEDSimulator.Core.csproj",
+      "msbuildProject": "../IEDSimulator.Core/IEDSimulator.Core.csproj"
+    },
+    "IEDSimulator.Infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../IEDSimulator.Infrastructure/IEDSimulator.Infrastructure.csproj",
+      "msbuildProject": "../IEDSimulator.Infrastructure/IEDSimulator.Infrastructure.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net9.0": [
+      "IEC61850.NET.core.2.0 >= 1.0.0",
+      "IEDSimulator.Core >= 1.0.0",
+      "IEDSimulator.Infrastructure >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "/Users/macbook/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Presentation/IEDSimulator.Presentation.csproj",
+      "projectName": "IEDSimulator.Presentation",
+      "projectPath": "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Presentation/IEDSimulator.Presentation.csproj",
+      "packagesPath": "/Users/macbook/.nuget/packages/",
+      "outputPath": "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Presentation/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/Users/macbook/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net9.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "projectReferences": {
+            "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj": {
+              "projectPath": "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj"
+            },
+            "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Core/IEDSimulator.Core.csproj": {
+              "projectPath": "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Core/IEDSimulator.Core.csproj"
+            },
+            "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/IEDSimulator.Infrastructure.csproj": {
+              "projectPath": "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/IEDSimulator.Infrastructure.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.100"
+    },
+    "frameworks": {
+      "net9.0": {
+        "targetAlias": "net9.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

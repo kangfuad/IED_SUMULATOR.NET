@@ -1,0 +1,71 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "IEDSimulator.Presentation/1.0.0": {
+        "dependencies": {
+          "IEC61850.NET.core.2.0": "1.0.0",
+          "IEDSimulator.Core": "1.0.0",
+          "IEDSimulator.Infrastructure": "1.0.0"
+        },
+        "runtime": {
+          "IEDSimulator.Presentation.dll": {}
+        }
+      },
+      "IEC61850.NET.core.2.0/1.0.0": {
+        "runtime": {
+          "IEC61850.NET.core.2.0.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "IEDSimulator.Core/1.0.0": {
+        "runtime": {
+          "IEDSimulator.Core.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "IEDSimulator.Infrastructure/1.0.0": {
+        "dependencies": {
+          "IEC61850.NET.core.2.0": "1.0.0",
+          "IEDSimulator.Core": "1.0.0"
+        },
+        "runtime": {
+          "IEDSimulator.Infrastructure.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "IEDSimulator.Presentation/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "IEC61850.NET.core.2.0/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "IEDSimulator.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "IEDSimulator.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

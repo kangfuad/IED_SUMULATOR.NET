@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SCL xmlns="http://www.iec.ch/61850/2003/SCL">
+    <Header id="MMXU_IED" version="1" revision="1" />
+    <Communication>
+        <SubNetwork name="Network1" type="8-MMS">
+            <ConnectedAP iedName="MMXU_IED" apName="AP1">
+                <Address>
+                    <P type="IP">127.0.0.1</P>
+                    <P type="IP-SUBNET">255.255.255.0</P>
+                    <P type="IP-GATEWAY">0.0.0.0</P>
+                    <P type="OSI-TSEL">0001</P>
+                    <P type="OSI-PSEL">00000001</P>
+                    <P type="OSI-SSEL">0001</P>
+                </Address>
+            </ConnectedAP>
+        </SubNetwork>
+    </Communication>
+    <IED name="MMXU_IED">
+        <Services>
+            <DynAssociation />
+            <GetDirectory />
+            <GetDataObjectDefinition />
+            <GetDataSetValue />
+            <SetDataSetValue />
+            <DataSetDirectory />
+            <ReadWrite />
+            <TimerActivatedControl />
+            <ReportSettings datSet="Conf" rptID="Dyn" optFields="Dyn" bufTime="Dyn" trgOps="Dyn"
+                intgPd="Dyn" />
+        </Services>
+        <AccessPoint name="AP1">
+            <Server>
+                <Authentication />
+                <LDevice inst="Measurements">
+                    <LN0 lnClass="LLN0" inst="" lnType="LLN0">
+                        <DataSet name="MeasurementValues">
+                            <FCDA ldInst="Measurements" prefix="" lnClass="MMXU" lnInst="1"
+                                doName="PhV" daName="phsA.cVal.mag.f" fc="MX" />
+                            <FCDA ldInst="Measurements" prefix="" lnClass="MMXU" lnInst="1"
+                                doName="A" daName="phsA.cVal.mag.f" fc="MX" />
+                            <FCDA ldInst="Measurements" prefix="" lnClass="MMXU" lnInst="1"
+                                doName="Hz" daName="mag.f" fc="MX" />
+                        </DataSet>
+
+                        <!-- Buffered Report Control Block -->
+                        <ReportControl name="brcbMeasurements01" rptID="MMXU_Measurements"
+                            datSet="MeasurementValues" confRev="1" buffered="true" bufTime="50"
+                            intgPd="1000">
+                            <TrgOps dchg="true" qchg="true" dupd="true" period="true" gi="true" />
+                            <OptFields seqNum="true" timeStamp="true" dataSet="true"
+                                reasonCode="true" dataRef="true" entryID="true" configRef="true" />
+                            <RptEnabled max="2" />
+                        </ReportControl>
+
+                        <!-- Unbuffered Report Control Block -->
+                        <ReportControl name="urcbMeasurements01" rptID="MMXU_Measurements_URCB"
+                            datSet="MeasurementValues" confRev="1" buffered="false" bufTime="50"
+                            intgPd="1000">
+                            <TrgOps dchg="true" qchg="true" dupd="true" period="true" gi="true" />
+                            <OptFields seqNum="true" timeStamp="true" dataSet="true"
+                                reasonCode="true" dataRef="true" entryID="true" configRef="true" />
+                            <RptEnabled max="2" />
+                        </ReportControl>
+                    </LN0>
+
+                    <LN prefix="" lnClass="MMXU" inst="1" lnType="MMXU_1">
+                        <DOI name="Mod">
+                            <DAI name="ctlModel">
+                                <Val>status-only</Val>
+                            </DAI>
+                        </DOI>
+                    </LN>
+                </LDevice>
+            </Server>
+        </AccessPoint>
+    </IED>
+
+
+    <DataTypeTemplates>
+        <LNodeType id="LLN0" lnClass="LLN0">
+            <DO name="Mod" type="INC_1" />
+            <DO name="Beh" type="INS_1" />
+            <DO name="Health" type="INS_1" />
+            <DO name="NamPlt" type="LPL_1" />
+        </LNodeType>
+
+        <LNodeType id="MMXU_1" lnClass="MMXU">
+            <DO name="Mod" type="INC_1" />
+            <DO name="Beh" type="INS_1" />
+            <DO name="Health" type="INS_1" />
+            <DO name="NamPlt" type="LPL_1" />
+            <DO name="Hz" type="MV_1" />
+            <DO name="PhV" type="WYE_1" />
+            <DO name="A" type="WYE_1" />
+            <DO name="TotW" type="MV_1" />
+            <DO name="TotVAr" type="MV_1" />
+            <DO name="TotVA" type="MV_1" />
+            <DO name="TotPF" type="MV_1" />
+        </LNodeType>
+
+        <DOType id="INC_1" cdc="INC">
+            <DA name="stVal" fc="ST" bType="INT32" />
+            <DA name="q" fc="ST" bType="Quality" />
+            <DA name="t" fc="ST" bType="Timestamp" />
+            <DA name="ctlModel" fc="CF" bType="Enum" type="CtlModelKind" />
+        </DOType>
+
+        <DOType id="INS_1" cdc="INS">
+            <DA name="stVal" fc="ST" bType="INT32" />
+            <DA name="q" fc="ST" bType="Quality" />
+            <DA name="t" fc="ST" bType="Timestamp" />
+        </DOType>
+
+        <DOType id="LPL_1" cdc="LPL">
+            <DA name="vendor" fc="DC" bType="VisString255" />
+            <DA name="swRev" fc="DC" bType="VisString255" />
+            <DA name="d" fc="DC" bType="VisString255" />
+            <DA name="configRev" fc="DC" bType="VisString255" />
+        </DOType>
+
+        <DOType id="MV_1" cdc="MV">
+            <DA name="mag" fc="MX" bType="Struct" type="AnalogueValue_1" />
+            <DA name="q" fc="MX" bType="Quality" />
+            <DA name="t" fc="MX" bType="Timestamp" />
+        </DOType>
+
+        <DOType id="WYE_1" cdc="WYE">
+            <SDO name="phsA" type="CMV_1" />
+            <SDO name="phsB" type="CMV_1" />
+            <SDO name="phsC" type="CMV_1" />
+            <SDO name="neut" type="CMV_1" />
+        </DOType>
+
+        <DOType id="CMV_1" cdc="CMV">
+            <DA name="cVal" fc="MX" bType="Struct" type="Vector" />
+            <DA name="q" fc="MX" bType="Quality" />
+            <DA name="t" fc="MX" bType="Timestamp" />
+        </DOType>
+
+        <DAType id="AnalogueValue_1">
+            <BDA name="f" bType="FLOAT32" />
+        </DAType>
+
+        <DAType id="Vector">
+            <BDA name="mag" bType="Struct" type="AnalogueValue_1" />
+            <BDA name="ang" bType="Struct" type="AnalogueValue_1" />
+        </DAType>
+
+        <EnumType id="CtlModelKind">
+            <EnumVal ord="0">status-only</EnumVal>
+            <EnumVal ord="1">direct-with-normal-security</EnumVal>
+            <EnumVal ord="2">sbo-with-normal-security</EnumVal>
+            <EnumVal ord="3">direct-with-enhanced-security</EnumVal>
+            <EnumVal ord="4">sbo-with-enhanced-security</EnumVal>
+        </EnumType>
+    </DataTypeTemplates>
+</SCL>
