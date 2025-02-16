@@ -72,7 +72,6 @@ namespace IEDSimulator.Presentation
         private async Task ExecuteControlMenu()
         {
             var controls = _multiIedSimulator.GetAvailableControls();
-
             if (controls.Count == 0)
             {
                 Console.WriteLine("Tidak ada kontrol yang tersedia.");
@@ -101,63 +100,96 @@ namespace IEDSimulator.Presentation
             if (selectedIndex == 0) return;
 
             var selectedControl = controls[selectedIndex - 1];
-            var fullControlId = selectedControl.Split('(', ')')[1].Trim();
+            // Extract IED name and control path
+            var controlParts = selectedControl.Split('(', ')')[1].Trim().Split(' ')[0];
+            var stationName = controlParts.Split('/')[0];
 
-            // Ekstrak nama stasiun dari kontrol
-            var stationName = fullControlId.Split('/')[0];
             var simulator = _multiIedSimulator.GetSimulatorByStationName(stationName);
 
-            if (simulator != null)
+            if (simulator == null)
             {
-                var controlPoint = simulator.Configuration.DataPoints
-                    .FirstOrDefault(dp => dp.Id.Contains(fullControlId));
+                Console.WriteLine($"Simulator untuk {stationName} tidak ditemukan.");
+                return;
+            }
 
-                if (controlPoint != null)
-                {
-                    Console.WriteLine($"\nDetail Kontrol:");
-                    foreach (var metadata in controlPoint.Metadata)
-                    {
-                        Console.WriteLine($"{metadata.Key}: {metadata.Value}");
-                    }
-                }
-
-                // Pilih operasi kontrol
+            try 
+            {
+                // Tampilkan opsi kontrol berdasarkan tipe IED
                 Console.WriteLine("\nPilih Operasi:");
-                Console.WriteLine("1. Open");
-                Console.WriteLine("2. Close");
-                Console.WriteLine("3. Select");
-                Console.WriteLine("4. Cancel");
+                if (stationName.StartsWith("CSWI"))
+                {
+                    Console.WriteLine("1. Select");
+                    Console.WriteLine("2. Operate (Close)");
+                    Console.WriteLine("3. Operate (Open)");
+                    Console.WriteLine("4. Cancel");
+                }
+                else if (stationName.StartsWith("XCBR"))
+                {
+                    Console.WriteLine("1. Open");
+                    Console.WriteLine("2. Close");
+                    Console.WriteLine("3. Block");
+                    Console.WriteLine("4. Unblock");
+                }
                 Console.WriteLine("0. Kembali");
 
                 Console.Write("Masukkan pilihan operasi: ");
-                if (!int.TryParse(Console.ReadLine(), out int operationIndex) || 
-                    operationIndex < 0 || 
-                    operationIndex > 4)
+                if (!int.TryParse(Console.ReadLine(), out int operationIndex) ||
+                    operationIndex < 0 || operationIndex > 4)
                 {
-                    Console.WriteLine("Pilihan tidak valid.");
+                    Console.WriteLine("Pilihan operasi tidak valid.");
                     return;
                 }
 
                 if (operationIndex == 0) return;
 
-                ControlOperation operation = operationIndex switch
+                ControlOperation operation = ControlOperation.Select; // default
+                
+                if (stationName.StartsWith("CSWI"))
                 {
-                    1 => ControlOperation.Open,
-                    2 => ControlOperation.Close,
-                    3 => ControlOperation.Select,
-                    4 => ControlOperation.Cancel,
-                    _ => throw new ArgumentException("Operasi tidak valid")
-                };
+                    operation = operationIndex switch
+                    {
+                        1 => ControlOperation.Select,
+                        2 => ControlOperation.Close,
+                        3 => ControlOperation.Open,
+                        4 => ControlOperation.Cancel,
+                        _ => ControlOperation.Select
+                    };
+                }
+                else if (stationName.StartsWith("XCBR"))
+                {
+                    operation = operationIndex switch
+                    {
+                        1 => ControlOperation.Open,
+                        2 => ControlOperation.Close,
+                        3 => ControlOperation.Select, // Block
+                        4 => ControlOperation.Cancel, // Unblock
+                        _ => ControlOperation.Select
+                    };
+                }
 
-                bool result = await simulator.ExecuteControlAsync(fullControlId, operation);
-                Console.WriteLine(result 
-                    ? $"Kontrol berhasil dieksekusi: {fullControlId} - Operasi {operation}" 
-                    : "Gagal mengeksekusi kontrol");
+                bool result = await simulator.ExecuteControlAsync(controlParts, operation);
+                
+                if (result)
+                {
+                    Console.WriteLine($"Kontrol berhasil dieksekusi: {controlParts} - {operation}");
+                    // Tampilkan status terkini
+                    var dataPoints = await simulator.GetCurrentDataPointsAsync();
+                    var controlPoint = dataPoints.FirstOrDefault(dp => dp.Id.Contains(controlParts));
+                    if (controlPoint != null)
+                    {
+                        Console.WriteLine($"Status saat ini: {controlPoint.Value}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Gagal mengeksekusi kontrol");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Simulator tidak ditemukan.");
+                Console.WriteLine($"Error saat eksekusi kontrol: {ex.Message}");
             }
         }
+
     }
 }

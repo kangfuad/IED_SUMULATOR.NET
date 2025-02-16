@@ -19,24 +19,61 @@ class Program
                 "../Models/model_xcbr.icd"
             };
 
-            // Inisialisasi simulator multi-IED
+            Console.WriteLine("Starting IED Simulators...");
             var multiIedSimulator = new MultiIedSimulator();
 
             // Tambahkan setiap IED ke simulator
             foreach (var icdFile in icdFiles)
             {
-                multiIedSimulator.AddIedSimulator(icdFile);
+                try 
+                {
+                    multiIedSimulator.AddIedSimulator(icdFile);
+                    Console.WriteLine($"Started simulator for {icdFile}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to start simulator for {icdFile}: {ex.Message}");
+                }
             }
+
+            // Validasi port
+            var usedPorts = multiIedSimulator.GetUsedPorts();
+            if (usedPorts.Count != usedPorts.Distinct().Count())
+            {
+                Console.WriteLine("Warning: Duplicate ports detected!");
+            }
+
+            // Log informasi port yang digunakan
+            Console.WriteLine("\nActive IED Simulators:");
+            foreach (var simulator in multiIedSimulator.GetSimulators())
+            {
+                if (simulator.Configuration != null)
+                {
+                    var port = usedPorts[multiIedSimulator.GetSimulators().ToList().IndexOf(simulator)];
+                    Console.WriteLine($"- {simulator.Configuration.StationName} listening on port {port}");
+                }
+            }
+
+            Console.WriteLine("\nWaiting for client connections...");
+
+            // Beri waktu untuk server menginisialisasi
+            await Task.Delay(1000);
 
             // Jalankan simulasi di background
             _ = multiIedSimulator.StartSimulationAsync();
+
+            Console.WriteLine("\nSimulators are running. Press any key to show menu...");
+            Console.ReadKey();
+            Console.Clear();
 
             // Tampilkan menu utama dan tunggu interaksi
             await ShowMainMenu(multiIedSimulator);
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Kesalahan pada simulator multi-IED: {ex.Message}");
+            Console.Error.WriteLine($"Error pada simulator multi-IED: {ex.Message}");
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
         }
     }
 

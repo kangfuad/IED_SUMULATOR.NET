@@ -15,26 +15,40 @@ namespace IEDSimulator.Infrastructure.Repositories
     {
         private readonly ConcurrentDictionary<string, DataPoint> _dataPoints = new ConcurrentDictionary<string, DataPoint>();
         private readonly IedConnection _connection;
+        private readonly IedServer _server;
+        private readonly int _port;
+        private readonly string _icdFilePath;
 
-        public IEC61850DataPointRepository(string icdFilePath)
+        public IEC61850DataPointRepository(string icdFilePath, int defaultPort = 102)
         {
-            if (string.IsNullOrEmpty(icdFilePath))
-                throw new ArgumentNullException(nameof(icdFilePath));
-
+            _icdFilePath = icdFilePath ?? throw new ArgumentNullException(nameof(icdFilePath));
+            _port = defaultPort;
             _connection = new IedConnection();
+            _server = new IedServer(_port);
+            InitializeServer();
+        }
+
+        private void InitializeServer()
+        {
+            try
+            {
+                _server.Start(); // Menggunakan Start() bukan StartAsync()
+                Console.WriteLine($"Repository initialized on port {_port}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to initialize server: {ex.Message}");
+                throw;
+            }
         }
 
         public Task<DataPoint> GetDataPointAsync(string id)
         {
-            // Gunakan TryGetValue dengan ConcurrentDictionary
-            return Task.FromResult(_dataPoints.TryGetValue(id, out var dataPoint) 
-                ? dataPoint 
-                : null);
+            return Task.FromResult(_dataPoints.TryGetValue(id, out var dataPoint) ? dataPoint : null);
         }
 
         public Task UpdateDataPointAsync(DataPoint dataPoint)
         {
-            // Gunakan AddOrUpdate untuk operasi thread-safe
             _dataPoints.AddOrUpdate(
                 dataPoint.Id, 
                 dataPoint, 
@@ -45,7 +59,6 @@ namespace IEDSimulator.Infrastructure.Repositories
 
         public Task AddDataPointAsync(DataPoint dataPoint)
         {
-            // Gunakan TryAdd untuk menambahkan dengan aman
             _dataPoints.TryAdd(dataPoint.Id, dataPoint);
             return Task.CompletedTask;
         }
@@ -136,7 +149,6 @@ namespace IEDSimulator.Infrastructure.Repositories
 
         public Task<IEnumerable<DataPoint>> GetAllDataPointsAsync()
         {
-            // Gunakan ToList() untuk membuat salinan
             return Task.FromResult(_dataPoints.Values.ToList().AsEnumerable());
         }
     }

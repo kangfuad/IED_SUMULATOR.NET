@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IEDSimulator.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c99b4bd0f1935d3c33a59fcf2fedcbdcbb5a54a1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+910c6a039b8f4afadce76ec43a0fca19fdd78589")]
 [assembly: System.Reflection.AssemblyProductAttribute("IEDSimulator.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IEDSimulator.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

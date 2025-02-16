@@ -28,18 +28,66 @@ namespace IEDSimulator.Presentation
             IsLoggingEnabled = true;
         }
 
+        public List<int> GetUsedPorts()
+        {
+            return _iedSimulators
+                .Where(simulator => simulator.Configuration != null)
+                .Select(simulator => ExtractPortFromConfig(simulator.Configuration))
+                .ToList();
+        }
+
         // Metode untuk menonaktifkan logging
         public void DisableLogging()
         {
             IsLoggingEnabled = false;
         }
 
-        // Modifikasi metode GetSimulatorByStationName
-        public IedSimulatorService? GetSimulatorByStationName(string stationName)
+        public IEnumerable<IedSimulatorService> GetSimulators()
         {
-            return _iedSimulators.FirstOrDefault(
-                simulator => simulator.Configuration?.StationName?.Equals(stationName, StringComparison.OrdinalIgnoreCase) == true
+            return _iedSimulators.ToList();
+        }
+
+        private int ExtractPortFromConfig(IedConfiguration config)
+        {
+            try
+            {
+                // Parse IP address dari file path untuk mendapatkan port
+                // Format: CSWI_IED -> 102, MMXU_IED -> 103, XCBR_IED -> 104
+                if (config.StationName.StartsWith("CSWI")) return 10102;
+                if (config.StationName.StartsWith("MMXU")) return 10103;
+                if (config.StationName.StartsWith("XCBR")) return 10104;
+                
+                // Default port jika tidak ada match
+                return 10102 + _iedSimulators.Count;
+            }
+            catch
+            {
+                // Fallback ke default port + increment
+                return 102 + _iedSimulators.Count;
+            }
+        }
+
+        public IedSimulatorService GetSimulatorByStationName(string stationName)
+        {
+            if (string.IsNullOrEmpty(stationName))
+            {
+                throw new ArgumentNullException(nameof(stationName));
+            }
+
+            // Parse stationName dari full controlId
+            string parsedStationName = stationName;
+            if (stationName.Contains("/"))
+            {
+                parsedStationName = stationName.Split('/')[0];
+            }
+
+            var simulator = _iedSimulators.FirstOrDefault(
+                sim => sim.Configuration != null && 
+                    sim.Configuration.StationName != null &&
+                    sim.Configuration.StationName.Equals(parsedStationName, StringComparison.OrdinalIgnoreCase)
             );
+
+            return simulator ?? throw new InvalidOperationException($"No simulator found for station {stationName}");
         }
 
         public void AddIedSimulator(string icdFilePath)
@@ -48,10 +96,12 @@ namespace IEDSimulator.Presentation
             XDocument xmlDoc = XDocument.Load(icdFilePath);
             XNamespace scl = "http://www.iec.ch/61850/2003/SCL";
 
-            // Ekstrak nama IED dari header atau IED element dengan fallback
             string stationName = ExtractStationName(xmlDoc, scl);
+            int port = DeterminePort(stationName);
 
-            var dataPointRepository = new IEC61850DataPointRepository(icdFilePath);
+            Console.WriteLine($"Initializing {stationName} simulator on port {port}...");
+            
+            var dataPointRepository = new IEC61850DataPointRepository(icdFilePath, port);
             var simulatorService = new IedSimulatorService(dataPointRepository);
 
             var configuration = new IedConfiguration
@@ -61,14 +111,11 @@ namespace IEDSimulator.Presentation
                 IcdFilePath = icdFilePath
             };
 
-            // Temukan dan tambahkan titik data dari file ICD
-            var dataPoints = DiscoverDataPointsFromIcdFile(xmlDoc, scl, stationName);
-            configuration.DataPoints.AddRange(dataPoints);
-
             simulatorService.InitializeAsync(configuration).Wait();
             simulatorService.DataPointChanged += OnDataPointChanged;
 
             _iedSimulators.Add(simulatorService);
+            Console.WriteLine($"Successfully added {stationName} simulator on port {port}");
         }
 
         public List<string> GetAvailableControls()
@@ -115,6 +162,36 @@ namespace IEDSimulator.Presentation
 
             // Fallback ke nama file tanpa ekstensi
             return headerName ?? iedName ?? Path.GetFileNameWithoutExtension(xmlDoc.BaseUri);
+        }
+
+        private int ExtractPortFromSCL(XDocument xmlDoc, XNamespace scl)
+        {
+            try 
+            {
+                // Coba ambil port dari Communication section
+                var address = xmlDoc.Descendants(scl + "Address").FirstOrDefault();
+                if (address != null)
+                {
+                    var portElement = address.Elements(scl + "P")
+                        .FirstOrDefault(p => p.Attribute("type")?.Value == "OSI-TSEL");
+                    
+                    if (portElement != null)
+                    {
+                        // Convert TSEL ke port number
+                        // Biasanya dimulai dari 102 dan increment
+                        string tsel = portElement.Value;
+                        return 102 + Convert.ToInt32(tsel, 16);
+                    }
+                }
+                
+                // Jika tidak ada, gunakan port default + increment
+                return 102 + _iedSimulators.Count;
+            }
+            catch
+            {
+                // Fallback ke port default + increment jika gagal
+                return 102 + _iedSimulators.Count;
+            }
         }
 
         private List<DataPoint> DiscoverDataPointsFromIcdFile(XDocument xmlDoc, XNamespace scl, string stationName)
@@ -295,5 +372,18 @@ namespace IEDSimulator.Presentation
             }
             _updateCounters.AddOrUpdate(stationName, 1, (key, oldValue) => oldValue + 1);
         }
+
+        private int DeterminePort(string stationName)
+        {
+            // Menentukan port berdasarkan nama stasiun
+            return stationName switch
+            {
+                var s when s.StartsWith("CSWI") => 10102,
+                var s when s.StartsWith("MMXU") => 10103,
+                var s when s.StartsWith("XCBR") => 10104,
+                _ => 10102 // default port
+            };
+        }
+            
     }
 }
