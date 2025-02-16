@@ -1,0 +1,1 @@
+clear && dotnet restore && dotnet build && cd src/IEDSimulator.Presentation && dotnet run

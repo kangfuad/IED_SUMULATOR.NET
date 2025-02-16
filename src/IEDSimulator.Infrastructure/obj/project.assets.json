@@ -27,8 +27,8 @@
   "libraries": {
     "IEC61850.NET.core.2.0/1.0.0": {
       "type": "project",
-      "path": "../../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj",
-      "msbuildProject": "../../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj"
+      "path": "../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj",
+      "msbuildProject": "../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj"
     },
     "IEDSimulator.Core/1.0.0": {
       "type": "project",
@@ -67,8 +67,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj": {
-              "projectPath": "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj"
+            "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj": {
+              "projectPath": "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj"
             },
             "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Core/IEDSimulator.Core.csproj": {
               "projectPath": "/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Core/IEDSimulator.Core.csproj"

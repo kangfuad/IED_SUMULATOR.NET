@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference
-      Include="/Users/macbook/FUAD/ICON+/SCADA/IEC61850/libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj" />
+      Include="../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj" />
     <ProjectReference Include="../IEDSimulator.Core/IEDSimulator.Core.csproj" />
   </ItemGroup>
 

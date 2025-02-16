@@ -1,8 +1,3 @@
-/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimulator.Infrastructure.csproj.AssemblyReference.cache
-/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimulator.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
-/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimulator.Infrastructure.AssemblyInfoInputs.cache
-/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimulator.Infrastructure.AssemblyInfo.cs
-/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimulator.Infrastructure.csproj.CoreCompileInputs.cache
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/bin/Debug/net9.0/IEDSimulator.Infrastructure.deps.json
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/bin/Debug/net9.0/IEDSimulator.Infrastructure.dll
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/bin/Debug/net9.0/IEDSimulator.Infrastructure.pdb
@@ -10,6 +5,12 @@
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/bin/Debug/net9.0/IEDSimulator.Core.dll
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/bin/Debug/net9.0/IEDSimulator.Core.pdb
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/bin/Debug/net9.0/IEC61850.NET.core.2.0.pdb
+/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimulator.Infrastructure.csproj.AssemblyReference.cache
+/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimulator.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimulator.Infrastructure.AssemblyInfoInputs.cache
+/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimulator.Infrastructure.AssemblyInfo.cs
+/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimulator.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimulator.Infrastructure.sourcelink.json
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimul.C909435B.Up2Date
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/IEDSimulator.Infrastructure.dll
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Infrastructure/obj/Debug/net9.0/refint/IEDSimulator.Infrastructure.dll

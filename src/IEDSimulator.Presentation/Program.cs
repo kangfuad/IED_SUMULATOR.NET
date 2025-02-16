@@ -1,62 +1,110 @@
 using System;
 using System.Threading.Tasks;
-using IEDSimulator.Core.Models;
-using IEDSimulator.Infrastructure.Repositories;
-using IEDSimulator.Core.Services;
-using IEC61850.Client;  // Tambahkan namespace ini
-using IEC61850.Common;
+using System.Linq;
 using IEDSimulator.Presentation;
+using IEDSimulator.Core.Services;
+using IEDSimulator.Infrastructure.Repositories;
 
-namespace IEDSimulator.Presentation
+class Program
 {
-    class Program
+    static async Task Main(string[] args)
     {
-
-        static async Task Main(string[] args)
+        try 
         {
-            try 
+            // Daftar file ICD/SCL
+            var icdFiles = new[]
             {
-                // Daftar file ICD/SCL
-                var icdFiles = new[]
-                {
-                    new { Path = "../Models/model_cswi.icd", StationName = "IED_CSWI" },
-                    new { Path = "../Models/model_mmxu.icd", StationName = "IED_MMXU" },
-                    new { Path = "../Models/model_xcbr.icd", StationName = "IED_XCBR" }
-                };
+                "../Models/model_cswi.icd",
+                "../Models/model_mmxu.icd",
+                "../Models/model_xcbr.icd"
+            };
 
-                // Inisialisasi simulator multi-IED
-                var multiIedSimulator = new MultiIedSimulator();
+            // Inisialisasi simulator multi-IED
+            var multiIedSimulator = new MultiIedSimulator();
 
-                // Tambahkan setiap IED ke simulator
-                foreach (var icdFile in icdFiles)
-                {
-                    multiIedSimulator.AddIedSimulator(icdFile.Path, icdFile.StationName);
-                }
-
-                // Jalankan simulasi
-                await multiIedSimulator.StartSimulationAsync();
-
-                Console.WriteLine("Simulator Multi-IED berjalan. Tekan tombol apa pun untuk berhenti.");
-                Console.ReadKey();
-
-                // Hentikan simulasi
-                await multiIedSimulator.StopSimulationAsync();
-            }
-            catch (Exception ex)
+            // Tambahkan setiap IED ke simulator
+            foreach (var icdFile in icdFiles)
             {
-                Console.Error.WriteLine($"Kesalahan pada simulator multi-IED: {ex.Message}");
+                multiIedSimulator.AddIedSimulator(icdFile);
             }
+
+            // Jalankan simulasi di background
+            _ = multiIedSimulator.StartSimulationAsync();
+
+            // Tampilkan menu utama dan tunggu interaksi
+            await ShowMainMenu(multiIedSimulator);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Kesalahan pada simulator multi-IED: {ex.Message}");
+        }
+    }
+
+    static async Task ShowMainMenu(MultiIedSimulator multiIedSimulator)
+    {
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("=== Simulator IED ===");
+            Console.WriteLine("1. Menu Kontrol IED");
+            Console.WriteLine("2. Lihat Data Point");
+            Console.WriteLine("3. Aktifkan Logging");
+            Console.WriteLine("4. Nonaktifkan Logging");
+            Console.WriteLine("5. Keluar");
+            Console.Write("Pilih opsi: ");
+
+            var key = Console.ReadKey().KeyChar;
+            Console.WriteLine();
+
+            switch (key)
+            {
+                case '1':
+                    var controlMenu = new InteractiveControlMenu(multiIedSimulator);
+                    await controlMenu.ShowMenu();
+                    break;
+                case '2':
+                    await ShowDataPoints(multiIedSimulator);
+                    break;
+                case '3':
+                    multiIedSimulator.EnableLogging();
+                    Console.WriteLine("Logging diaktifkan.");
+                    break;
+                case '4':
+                    multiIedSimulator.DisableLogging();
+                    Console.WriteLine("Logging dinonaktifkan.");
+                    break;
+                case '5':
+                    await multiIedSimulator.StopSimulationAsync();
+                    return;
+                default:
+                    Console.WriteLine("Pilihan tidak valid.");
+                    break;
+            }
+
+            Console.WriteLine("\nTekan tombol apa pun untuk melanjutkan...");
+            Console.ReadKey();
+        }
+    }
+
+    static Task ShowDataPoints(MultiIedSimulator multiIedSimulator)
+    {
+        Console.Clear();
+        Console.WriteLine("=== Daftar Data Point ===");
+        var controls = multiIedSimulator.GetAvailableControls();
+        
+        if (controls.Count == 0)
+        {
+            Console.WriteLine("Tidak ada data point yang tersedia.");
+            return Task.CompletedTask;
         }
 
-        private static void OnDataPointChanged(object sender, Core.Models.DataPoint dataPoint)
+        foreach (var control in controls)
         {
-            Console.WriteLine(
-                $"Perubahan Titik Data: " +
-                $"ID: {dataPoint.Id}, " +
-                $"Nama: {dataPoint.Name}, " +
-                $"Nilai: {dataPoint.Value}, " +
-                $"Waktu: {dataPoint.Timestamp}"
-            );
+            Console.WriteLine(control);
         }
+
+        Console.WriteLine("\nTekan tombol apa pun untuk kembali...");
+        Console.ReadKey();
+        return Task.CompletedTask;
     }
 }

@@ -5,6 +5,7 @@
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Core/obj/Debug/net9.0/IEDSimulator.Core.AssemblyInfoInputs.cache
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Core/obj/Debug/net9.0/IEDSimulator.Core.AssemblyInfo.cs
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Core/obj/Debug/net9.0/IEDSimulator.Core.csproj.CoreCompileInputs.cache
+/Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Core/obj/Debug/net9.0/IEDSimulator.Core.sourcelink.json
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Core/obj/Debug/net9.0/IEDSimulator.Core.dll
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Core/obj/Debug/net9.0/refint/IEDSimulator.Core.dll
 /Users/macbook/FUAD/ICON+/SCADA/IEC61850/simulator/src/IEDSimulator.Core/obj/Debug/net9.0/IEDSimulator.Core.pdb

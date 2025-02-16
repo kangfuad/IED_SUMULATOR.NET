@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
 using IEDSimulator.Core.Models;
 using IEDSimulator.Core.Interfaces;
-using IEC61850.Client;  // Sesuaikan dengan namespace dari library
+using IEDSimulator.Core.Enums;
+using IEC61850.Client;
 using IEC61850.Common;
 
 namespace IEDSimulator.Infrastructure.Repositories
 {
     public class IEC61850DataPointRepository : IDataPointRepository
     {
-        private readonly Dictionary<string, DataPoint> _dataPoints = new Dictionary<string, DataPoint>();
+        private readonly ConcurrentDictionary<string, DataPoint> _dataPoints = new ConcurrentDictionary<string, DataPoint>();
         private readonly IedConnection _connection;
 
         public IEC61850DataPointRepository(string icdFilePath)
@@ -19,68 +21,32 @@ namespace IEDSimulator.Infrastructure.Repositories
             if (string.IsNullOrEmpty(icdFilePath))
                 throw new ArgumentNullException(nameof(icdFilePath));
 
-            // Inisialisasi koneksi IED
             _connection = new IedConnection();
         }
 
-        public async Task<DataPoint> GetDataPointAsync(string id)
+        public Task<DataPoint> GetDataPointAsync(string id)
         {
-            if (_dataPoints.TryGetValue(id, out var dataPoint))
-            {
-                try 
-                {
-                    // Baca nilai terbaru dari IED
-                    var parts = id.Split('$');
-                    var path = parts[0];
-                    var fc = (FunctionalConstraint)Enum.Parse(typeof(FunctionalConstraint), parts[1]);
-                    
-                    var mmsValue = _connection.ReadValue(path, fc);
-                    dataPoint.Value = ConvertMmsValueToObject(mmsValue);
-                    dataPoint.Timestamp = DateTime.UtcNow;
-                }
-                catch 
-                {
-                    // Tangani kesalahan pembacaan
-                }
-                
-                return dataPoint;
-            }
-            return null;
+            // Gunakan TryGetValue dengan ConcurrentDictionary
+            return Task.FromResult(_dataPoints.TryGetValue(id, out var dataPoint) 
+                ? dataPoint 
+                : null);
         }
-
-        public Task<IEnumerable<DataPoint>> GetAllDataPointsAsync() => 
-            Task.FromResult(_dataPoints.Values.AsEnumerable());
 
         public Task UpdateDataPointAsync(DataPoint dataPoint)
         {
-            if (_dataPoints.ContainsKey(dataPoint.Id))
-            {
-                _dataPoints[dataPoint.Id] = dataPoint;
-                
-                try 
-                {
-                    // Tulis nilai ke IED
-                    var parts = dataPoint.Id.Split('$');
-                    var path = parts[0];
-                    var fc = (FunctionalConstraint)Enum.Parse(typeof(FunctionalConstraint), parts[1]);
-                    
-                    var mmsValue = ConvertObjectToMmsValue(dataPoint.Value);
-                    _connection.WriteValue(path, fc, mmsValue);
-                }
-                catch 
-                {
-                    // Tangani kesalahan penulisan
-                }
-            }
+            // Gunakan AddOrUpdate untuk operasi thread-safe
+            _dataPoints.AddOrUpdate(
+                dataPoint.Id, 
+                dataPoint, 
+                (key, oldValue) => dataPoint
+            );
             return Task.CompletedTask;
         }
 
         public Task AddDataPointAsync(DataPoint dataPoint)
         {
-            if (!_dataPoints.ContainsKey(dataPoint.Id))
-            {
-                _dataPoints.Add(dataPoint.Id, dataPoint);
-            }
+            // Gunakan TryAdd untuk menambahkan dengan aman
+            _dataPoints.TryAdd(dataPoint.Id, dataPoint);
             return Task.CompletedTask;
         }
 
@@ -115,6 +81,63 @@ namespace IEDSimulator.Infrastructure.Repositories
                 return new MmsValue(uintVal);
             
             return new MmsValue(value.ToString());
+        }
+
+        public async Task<bool> ExecuteControlAsync(string controlId, ControlOperation operation)
+        {
+            try 
+            {
+                // Pisahkan kontrolID menjadi komponen
+                var parts = controlId.Split('$');
+                var path = parts[0];
+                var fc = (FunctionalConstraint)Enum.Parse(typeof(FunctionalConstraint), parts[1]);
+
+                // Simulasi kontrol 
+                switch (operation)
+                {
+                    case ControlOperation.Open:
+                        Console.WriteLine($"Membuka kontrol: {controlId}");
+                        break;
+                    case ControlOperation.Close:
+                        Console.WriteLine($"Menutup kontrol: {controlId}");
+                        break;
+                    case ControlOperation.Select:
+                        Console.WriteLine($"Memilih kontrol: {controlId}");
+                        break;
+                    case ControlOperation.Cancel:
+                        Console.WriteLine($"Membatalkan kontrol: {controlId}");
+                        break;
+                }
+
+                // Tambahkan await untuk operasi asinkron
+                var dataPoint = await GetDataPointAsync(controlId);
+                
+                if (dataPoint != null)
+                {
+                    dataPoint.Value = operation switch
+                    {
+                        ControlOperation.Open => 1,
+                        ControlOperation.Close => 0,
+                        _ => dataPoint.Value
+                    };
+                    dataPoint.Timestamp = DateTime.UtcNow;
+
+                    await UpdateDataPointAsync(dataPoint);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Kesalahan kontrol: {ex.Message}");
+                return false;
+            }
+        }
+
+        public Task<IEnumerable<DataPoint>> GetAllDataPointsAsync()
+        {
+            // Gunakan ToList() untuk membuat salinan
+            return Task.FromResult(_dataPoints.Values.ToList().AsEnumerable());
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using IEDSimulator.Core.Models;
+using IEDSimulator.Core.Enums;
 
 namespace IEDSimulator.Core.Interfaces
 {
@@ -10,5 +11,8 @@ namespace IEDSimulator.Core.Interfaces
         Task<IEnumerable<DataPoint>> GetAllDataPointsAsync();
         Task UpdateDataPointAsync(DataPoint dataPoint);
         Task AddDataPointAsync(DataPoint dataPoint);
+
+        // Tambahkan metode kontrol baru
+        Task<bool> ExecuteControlAsync(string controlId, ControlOperation operation);
     }
 }
