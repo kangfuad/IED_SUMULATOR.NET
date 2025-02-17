@@ -10,7 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference
-      Include="../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj" />
+      Include="../../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj" />
     <ProjectReference Include="../IEDSimulator.Core/IEDSimulator.Core.csproj" />
     <ProjectReference Include="../IEDSimulator.Infrastructure/IEDSimulator.Infrastructure.csproj" />
   </ItemGroup>
