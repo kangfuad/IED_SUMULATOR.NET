@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IEDSimulator.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c4e070b645b2f0b35c6afe6b84d8e8a47c9f4af")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+de1227323c6461c88e9e6196802bbb7764e6c455")]
 [assembly: System.Reflection.AssemblyProductAttribute("IEDSimulator.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IEDSimulator.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

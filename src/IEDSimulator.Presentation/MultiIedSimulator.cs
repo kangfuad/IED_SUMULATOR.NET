@@ -351,7 +351,7 @@ namespace IEDSimulator.Presentation
 
         private void OnDataPointChanged(object sender, Core.Models.DataPoint dataPoint)
         {
-            if (!IsLoggingEnabled) return;
+            // if (!IsLoggingEnabled) return;
 
             var simulatorService = sender as IedSimulatorService;
             var stationName = simulatorService?.Configuration?.StationName ?? "Unknown";

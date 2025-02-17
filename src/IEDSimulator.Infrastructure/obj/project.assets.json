@@ -27,8 +27,8 @@
   "libraries": {
     "IEC61850.NET.core.2.0/1.0.0": {
       "type": "project",
-      "path": "../../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj",
-      "msbuildProject": "../../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj"
+      "path": "../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj",
+      "msbuildProject": "../../libiec61850/dotnet/core/2.0/IEC61850.NET.core.2.0/IEC61850.NET.core.2.0.csproj"
     },
     "IEDSimulator.Core/1.0.0": {
       "type": "project",
